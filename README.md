@@ -41,22 +41,18 @@ When using Laravel's event system with listeners that implement `ShouldQueue`, t
    ⇂ App\Listeners\TestListener@handle (ShouldQueue)  
    ```
 
-3. **Dispatch the test event:**
+3. **Test with sync driver** (simplest method):
    ```bash
-   php artisan test:event "hello world"
-   ```
-
-4. **Process the queued jobs** (this should process both duplicate jobs):
-   ```bash
-   php artisan queue:work --once
-   ```
-
-5. **Check the logs for duplicate entries:**
-   ```bash
+   QUEUE_CONNECTION=sync php artisan test:event "hello world"
    cat storage/logs/laravel.log
    ```
-   
-   **Note:** If you only see one log entry, you may need to run `php artisan queue:work --once` again to process the second queued job, but ideally both jobs should be processed with a single queue worker command.
+
+4. **Alternative: Test with database queue** (original method):
+   ```bash
+   php artisan test:event "hello world"
+   php artisan queue:work --once
+   cat storage/logs/laravel.log
+   ```
 
 ### Expected Bug Behavior
 
