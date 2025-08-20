@@ -46,9 +46,8 @@ When using Laravel's event system with listeners that implement `ShouldQueue`, t
    php artisan test:event "hello world"
    ```
 
-4. **Process the queued jobs** (run twice to see both executions):
+4. **Process the queued jobs** (this should process both duplicate jobs):
    ```bash
-   php artisan queue:work --once
    php artisan queue:work --once
    ```
 
@@ -56,10 +55,12 @@ When using Laravel's event system with listeners that implement `ShouldQueue`, t
    ```bash
    cat storage/logs/laravel.log
    ```
+   
+   **Note:** If you only see one log entry, you may need to run `php artisan queue:work --once` again to process the second queued job, but ideally both jobs should be processed with a single queue worker command.
 
 ### Expected Bug Behavior
 
-The listener should be called twice, showing duplicate log entries with the same message but different timestamps, indicating the bug where the same listener is executed multiple times for a single event dispatch.
+When you dispatch the event once, the listener should be called twice, showing duplicate log entries with the same message but different timestamps. This indicates the bug where the same listener is executed multiple times for a single event dispatch.
 
 **Example log output:**
 ```
